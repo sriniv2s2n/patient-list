@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function useGetApi(url) {
+function useGetApi(url, formatterFn) {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,9 +11,12 @@ function useGetApi(url) {
       try {
         const res = await fetch(url);
         const parsedResponse = await res.json();
-        const data = parsedResponse.entry.map((entry) => entry.resource);
+        let resData = parsedResponse;
+        if (formatterFn) {
+          resData = formatterFn(resData);
+        }
         setError(null);
-        setData(data);
+        setData(resData);
       } catch (e) {
         setError(e);
       } finally {
@@ -22,7 +25,7 @@ function useGetApi(url) {
     };
 
     fetchData();
-  }, [url]);
+  }, [url, formatterFn]);
 
   return { isLoading, data, error };
 }
