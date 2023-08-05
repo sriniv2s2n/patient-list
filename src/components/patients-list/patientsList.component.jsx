@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { DateTime } from "luxon";
 
 import Error from "../error/error.component";
@@ -9,7 +10,7 @@ import RangeFilter from "../range-filter/rangeFilter.component";
 
 import "./patientsList.styles.css";
 
-const { getPatientsListUrl } = constants;
+const { getPatientsListUrl, defaultFilterAgeForPatient } = constants;
 
 const formatBirthDate = (birthDate) => {
   if (!birthDate) return null;
@@ -55,10 +56,24 @@ const patientsDataFormatterFn = (rawPatientsApiResponse) => {
 };
 
 function PatientsList() {
+  let getPatientsQueryUrl = getPatientsListUrl;
+
+  const [range, setRange] = useState(defaultFilterAgeForPatient);
+  const [isRangeChecked, setIsRangeChecked] = useState(false);
+
+  const birthDate = DateTime.now()
+    .minus({ years: range })
+    .toFormat("yyyy-MM-dd");
+
+  if (isRangeChecked) {
+    getPatientsQueryUrl = `${getPatientsListUrl}?birthdate=${birthDate}`;
+  }
+
   const { isLoading, error, data } = useGetApi(
-    getPatientsListUrl,
+    getPatientsQueryUrl,
     patientsDataFormatterFn
   );
+
   return (
     <>
       {isLoading ? (
@@ -67,7 +82,12 @@ function PatientsList() {
         <Error />
       ) : (
         <>
-          <RangeFilter />
+          <RangeFilter
+            range={range}
+            setRange={setRange}
+            isRangeChecked={isRangeChecked}
+            setIsRangeChecked={setIsRangeChecked}
+          />
           <Table data={data} />
         </>
       )}
