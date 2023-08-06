@@ -75,7 +75,7 @@ function PatientsList() {
   );
 
   return (
-    <>
+    <div className="patient-list-container">
       <RangeFilter
         range={range}
         setRange={setRange}
@@ -84,7 +84,7 @@ function PatientsList() {
         setIsRangeChecked={setIsRangeChecked}
       />
       {isLoading ? <Loader /> : error ? <Error /> : <Table data={data} />}
-    </>
+    </div>
   );
 }
 

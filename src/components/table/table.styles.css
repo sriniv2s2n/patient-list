@@ -1,10 +1,40 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    background-color: white;
+}
+
+table thead tr {
+    top: 0;
+    position: sticky;
+}
+
+table tr {
+    height: 40px;
 }
 
 table, td, th {
     text-align: center;
     line-height: 2;
+}
+
+table th {
+    color: white;
+    background-color: #6495ED;
+}
+
+table tbody tr:nth-child(2n+1) {
+    background-color: #E6E6FA;
+}
+
+table tbody tr:nth-child(2n) {
+    background-color: #F0F8FF;
+}
+
+.table-container {
+    width: 75%;
+    height: 500px;
+    overflow-y: scroll;
     border: 1px solid black;
+    border-radius: 5px;
 }
