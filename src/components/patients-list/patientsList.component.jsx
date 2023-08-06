@@ -76,21 +76,14 @@ function PatientsList() {
 
   return (
     <>
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Error />
-      ) : (
-        <>
-          <RangeFilter
-            range={range}
-            setRange={setRange}
-            isRangeChecked={isRangeChecked}
-            setIsRangeChecked={setIsRangeChecked}
-          />
-          <Table data={data} />
-        </>
-      )}
+      <RangeFilter
+        range={range}
+        setRange={setRange}
+        isLoading={isLoading}
+        isRangeChecked={isRangeChecked}
+        setIsRangeChecked={setIsRangeChecked}
+      />
+      {isLoading ? <Loader /> : error ? <Error /> : <Table data={data} />}
     </>
   );
 }

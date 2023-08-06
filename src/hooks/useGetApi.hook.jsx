@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function useGetApi(url, formatterFn) {
+  const timerId = useRef(null);
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,10 +12,9 @@ function useGetApi(url, formatterFn) {
       try {
         const res = await fetch(url);
         const parsedResponse = await res.json();
-        let resData = parsedResponse;
-        if (formatterFn) {
-          resData = formatterFn(resData);
-        }
+        const resData = formatterFn
+          ? formatterFn(parsedResponse)
+          : parsedResponse;
         setError(null);
         setData(resData);
       } catch (e) {
@@ -24,7 +24,11 @@ function useGetApi(url, formatterFn) {
       }
     };
 
-    fetchData();
+    timerId.value = setTimeout(fetchData, 350);
+
+    return () => {
+      clearTimeout(timerId.value);
+    };
   }, [url, formatterFn]);
 
   return { isLoading, data, error };
